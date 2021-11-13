@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-import { App } from '@slack/bolt';
+const { App } = require('@slack/bolt');
 
 const port = process.env.PORT || 3000
 const app = express()
