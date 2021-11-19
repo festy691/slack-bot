@@ -157,9 +157,49 @@ async function hobbies (res, payload){
     }
     
     Response.hobby = payload.actions[0].selected_options[0].value;
+
+    let message =  {
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "Pick one or more items from the list"
+                },
+                "accessory": {
+                    "type": "multi_static_select",
+                    "placeholder": {
+                        "type": "plain_text",
+                        "text": "Select an item",
+                        "emoji": true
+                    },
+                    "options": [
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Choice 1",
+                                "emoji": true
+                            },
+                            "value": "value-0"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Choice 2",
+                                "emoji": true
+                            },
+                            "value": "value-1"
+                        }
+                    ],
+                     "action_id": "create_feedback_final_step"
+                }
+            }
+        ]
+    };
+
     await Response.save((err, docs)=>{
         if (!err){
-            return res.status(200).send("Thank you");
+            return res.status(200).json(message);
         }
         else{
             return res.status(400).send('Failed');
