@@ -164,20 +164,18 @@ async function hobbies (res, payload){
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Pick one or more items from the list"
-                },
-                "accessory": {
-                    "type": "multi_static_select",
-                    "placeholder": {
-                        "type": "plain_text",
-                        "text": "Select an item",
-                        "emoji": true
-                    },
+                    "text": "HOBBIES.\n\n"
+                }
+            },
+            {
+                "type": "input",
+                "element": {
+                    "type": "checkboxes",
                     "options": [
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "Choice 1",
+                                "text": "Foothball",
                                 "emoji": true
                             },
                             "value": "value-0"
@@ -185,13 +183,41 @@ async function hobbies (res, payload){
                         {
                             "text": {
                                 "type": "plain_text",
-                                "text": "Choice 2",
+                                "text": "Basketball",
                                 "emoji": true
                             },
                             "value": "value-1"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Music",
+                                "emoji": true
+                            },
+                            "value": "value-2"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Sleep",
+                                "emoji": true
+                            },
+                            "value": "value-3"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Movies",
+                                "emoji": true
+                            },
+                            "value": "value-4"
                         }
-                    ],
-                     "action_id": "create_feedback_final_step"
+                    ]
+                },
+                "label": {
+                    "type": "plain_text",
+                    "text": "Please select all your hobbies:",
+                    "emoji": true
                 }
             }
         ]
