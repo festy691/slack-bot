@@ -1,6 +1,14 @@
 const express = require('express');
 var bodyParser = require('body-parser');
+const connect = require('./config/db');
+const dotenv = require('dotenv');
+const ResponseModel = require("./response.model");
 //const { App } = require('@slack/bolt');
+
+//load environment variables
+dotenv.config({path : './.env'});
+
+connect();
 
 const port = process.env.PORT || 3000
 const app = express()
@@ -26,8 +34,8 @@ app.post('/welcome', function(req,res){
 app.post('/interaction', function(req,res){
     console.log(req.body.payload);
     var data = JSON.parse(req.body.payload);
-    if (data.callback_id && data.callback_id == "my_feeling") feeling(res);
-    else if (data.callback_id && data.callback_id == "my_hobbies") hobbies(res);
+    if (data.callback_id && data.callback_id == "my_feeling") feeling(res, data);
+    else if (data.callback_id && data.callback_id == "my_hobbies") hobbies(res, data);
     else return res.status(200).send("wrong entry");
 });
 
@@ -69,7 +77,7 @@ async function welcomeUser (res){
     return res.status(200).json(message);
 }
 
-async function feeling (res){
+async function feeling (res, payload){
     let message = {
         "text": "What are your favorite hobbies?",
         "response_type": "in_channel",
@@ -112,11 +120,22 @@ async function feeling (res){
             }
         ]
     };
-    return res.status(200).json(message);
+    
+    let Response = new ResponseModel;
+    Response.mood = payload.actions[0].selected_options[0].value;
+    Response.user = payload.user.name;
+    await Response.save((err, docs)=>{
+        if (!err){
+            return res.status(200).json(message);
+        }
+        else{
+            return res.status(400).send('Failed');
+        }
+    });
 }
 
-async function hobbies (res){
-
+async function hobbies (res, payload){
+    return res.status(200).send("Thank you");
 }
 // Starts server
 app.listen(port, function() {
