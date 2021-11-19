@@ -24,7 +24,7 @@ app.post('/welcome', function(req,res){
 });
 
 app.post('/interaction', function(req,res){
-    console.log(req.body);
+    console.log(req.body.payload);
     var data = req.body.payload;
     if (data.callback_id && data.callback_id === "my_feeling") feeling(res);
     else if (data.callback_id && data.callback_id === "my_hobbies") hobbies(res);
