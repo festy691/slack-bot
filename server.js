@@ -25,7 +25,7 @@ app.post('/welcome', function(req,res){
 
 app.post('/interaction', function(req,res){
     console.log(req.body);
-    var data = req.body;
+    var data = JSON.parse(req.body);
     if (data.callback_id && data.callback_id === "my_feeling") feeling(res);
     else if (data.callback_id && data.callback_id === "my_hobbies") hobbies(res);
     else return res.status(200).send("wrong entry");
