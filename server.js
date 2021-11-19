@@ -1,19 +1,28 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { App } = require('@slack/bolt');
+var bodyParser = require('body-parser');
+//const { App } = require('@slack/bolt');
 
 const port = process.env.PORT || 3000
 const app = express()
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+// for parsing application/json
+app.use(bodyParser.json()); 
 
+// for parsing application/xwww-
+app.use(bodyParser.urlencoded({ extended: true })); 
+//form-urlencoded
 
-app.post('/welcome', (req,res)=>{
-    let data = req.body;
-    if (data.callback_id && data.callback_id === "my_feeling") feeling(res);
-    else if (data.callback_id && data.callback_id === "my_hobbies") hobbies(res);
-    else welcomeUser(res);
+app.post('/', function(req, res){
+    console.log(req.body);
+    res.send("recieved your request!");
+ });
+
+app.post('/welcome', function(req,res){
+    console.log(req.body);
+    var data = req.body;
+    if (data.callback_id && data.callback_id === "my_feeling") return feeling(res);
+    else if (data.callback_id && data.callback_id === "my_hobbies") return hobbies(res);
+    else return welcomeUser(res);
 });
 
 async function welcomeUser (res){
@@ -51,7 +60,6 @@ async function welcomeUser (res){
             }
         ]
     };
-    console.log(req.body.text);
     return res.status(200).json(message);
 }
 
@@ -98,7 +106,6 @@ async function feeling (res){
             }
         ]
     };
-    console.log(req.body.text);
     return res.status(200).json(message);
 }
 
