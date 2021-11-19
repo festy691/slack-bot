@@ -120,10 +120,19 @@ async function feeling (res, payload){
             }
         ]
     };
-    
+
+    let user = payload.user.name;
     let Response = new ResponseModel;
+    let result = await ResponseModel.findOne({user: user});
+
+    if(user){
+        Response = user;
+    }
+    else{
+        Response.user = payload.user.name;
+    }
+    
     Response.mood = payload.actions[0].selected_options[0].value;
-    Response.user = payload.user.name;
     await Response.save((err, docs)=>{
         if (!err){
             return res.status(200).json(message);
@@ -135,7 +144,27 @@ async function feeling (res, payload){
 }
 
 async function hobbies (res, payload){
-    return res.status(200).send("Thank you");
+    
+    let user = payload.user.name;
+    let Response = new ResponseModel;
+    let result = await ResponseModel.findOne({user: user});
+    
+    if(user){
+        Response = user;
+    }
+    else{
+        Response.user = payload.user.name;
+    }
+    
+    Response.hobby = payload.actions[0].selected_options[0].value;
+    await Response.save((err, docs)=>{
+        if (!err){
+            return res.status(200).send("Thank you");
+        }
+        else{
+            return res.status(400).send('Failed');
+        }
+    });
 }
 // Starts server
 app.listen(port, function() {
