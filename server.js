@@ -20,9 +20,15 @@ app.post('/', function(req, res){
 app.post('/welcome', function(req,res){
     console.log(req.body);
     var data = req.body;
-    if (data.callback_id && data.callback_id === "my_feeling") return feeling(res);
-    else if (data.callback_id && data.callback_id === "my_hobbies") return hobbies(res);
-    else return welcomeUser(res);
+    welcomeUser(res);
+});
+
+app.post('/interaction', function(req,res){
+    console.log(req.body);
+    var data = req.body;
+    if (data.callback_id && data.callback_id === "my_feeling") feeling(res);
+    else if (data.callback_id && data.callback_id === "my_hobbies") hobbies(res);
+    else return res.status(200).send("wrong entry");
 });
 
 async function welcomeUser (res){
