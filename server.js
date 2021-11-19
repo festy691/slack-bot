@@ -20,9 +20,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 //form-urlencoded
 
-app.post('/', function(req, res){
-    console.log(req.body);
-    res.send("recieved your request!");
+app.get('/', async function(req, res){
+    let result = await ResponseModel.find((err,docs)=>{
+        if (!err){
+            return res.status(200).send(docs);
+        }
+        else{
+            return res.status(400).send('Failed');
+        }
+    });
  });
 
 app.post('/welcome', function(req,res){
@@ -126,21 +132,29 @@ async function feeling (res, payload){
     let result = await ResponseModel.findOne({user: user});
 
     if(result){
-        Response.user = result.user;
+        result.mood = payload.actions[0].selected_options[0].value;
+        await result.save((err, docs)=>{
+            if (!err){
+                return res.status(200).json(message);
+            }
+            else{
+                return res.status(400).send('Failed');
+            }
+        });
     }
     else{
         Response.user = user;
+        Response.mood = payload.actions[0].selected_options[0].value;
+        await Response.save((err, docs)=>{
+            if (!err){
+                return res.status(200).json(message);
+            }
+            else{
+                return res.status(400).send('Failed');
+            }
+        });
     }
     
-    Response.mood = payload.actions[0].selected_options[0].value;
-    await Response.save((err, docs)=>{
-        if (!err){
-            return res.status(200).json(message);
-        }
-        else{
-            return res.status(400).send('Failed');
-        }
-    });
 }
 
 async function hobbies (res, payload){
@@ -150,87 +164,30 @@ async function hobbies (res, payload){
     let result = await ResponseModel.findOne({user: user});
     
     if(result){
-        Response.user = result.user;
+        result.hobby = payload.actions[0].selected_options[0].value;
+        await result.save((err, docs)=>{
+            if (!err){
+                return res.status(200).send("Thank you");
+            }
+            else{
+                return res.status(400).send('Failed');
+            }
+        });
     }
     else{
         Response.user = user;
+        Response.hobby = payload.actions[0].selected_options[0].value;
+    
+        await Response.save((err, docs)=>{
+            if (!err){
+                return res.status(200).send("Thank you");
+            }
+            else{
+                return res.status(400).send('Failed');
+            }
+        });
     }
     
-    Response.hobby = payload.actions[0].selected_options[0].value;
-
-    let message =  {
-        "blocks": [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "HOBBIES.\n\n"
-                }
-            },
-            {
-                "type": "input",
-                "element": {
-                    "type": "checkboxes",
-                    "options": [
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Foothball",
-                                "emoji": true
-                            },
-                            "value": "value-0"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Basketball",
-                                "emoji": true
-                            },
-                            "value": "value-1"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Music",
-                                "emoji": true
-                            },
-                            "value": "value-2"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Sleep",
-                                "emoji": true
-                            },
-                            "value": "value-3"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Movies",
-                                "emoji": true
-                            },
-                            "value": "value-4"
-                        }
-                    ]
-                },
-                "label": {
-                    "type": "plain_text",
-                    "text": "Please select all your hobbies:",
-                    "emoji": true
-                }
-            }
-        ]
-    };
-
-    await Response.save((err, docs)=>{
-        if (!err){
-            return res.status(200).json(message);
-        }
-        else{
-            return res.status(400).send('Failed');
-        }
-    });
 }
 // Starts server
 app.listen(port, function() {
