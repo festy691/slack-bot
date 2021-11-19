@@ -126,7 +126,7 @@ async function feeling (res, payload){
     let result = await ResponseModel.findOne({user: user});
 
     if(user){
-        Response = user;
+        Response.user = user.user;
     }
     else{
         Response.user = payload.user.name;
@@ -150,7 +150,7 @@ async function hobbies (res, payload){
     let result = await ResponseModel.findOne({user: user});
     
     if(user){
-        Response = user;
+        Response.user = user.user;
     }
     else{
         Response.user = payload.user.name;
